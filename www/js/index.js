@@ -34,6 +34,7 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        // app.downloadImage();
         app.downloadImageViaFileTransfer();
     },
     // Update DOM on a Received Event
@@ -79,8 +80,13 @@ var app = {
                                     console.log("createWriter", arguments);
                                     writer.onwriteend = function(e) {
                                         console.log("onWriteEnd", arguments);
+
+                                        var regex = new RegExp('^filesystem:local:///([^/]+)/(.*)$');
+                                        var url = fileEntry.toURL();
+                                        url = url.replace(regex,'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
+
                                         var img = document.createElement("img");
-                                        img.src = blackberry.io.home + "data/webviews/webfs/persistent/local__0/cordova_bot.png";
+                                        img.src = url;
                                         document.body.appendChild(img);
                                     };
             
@@ -101,8 +107,7 @@ var app = {
     },
 
     downloadImageViaFileTransfer: function() {
-
-        var url = 'http://cordova.apache.org/images/cordova_bot.png';
+        var url = 'http://weeversites.cloudapp.net/streetsmarts/videos/SpecApp_Awstin_2500.mp4';
         alert('Downloading: ' + url);
 
         window.webkitRequestFileSystem(
@@ -111,10 +116,13 @@ var app = {
                 console.log("requestFileSystem", arguments);
 
                 fs.root.getFile(
-                    "cordova_bot.png", 
+                    "SpecApp_Awstin_2500.mp4", 
                     {create: true}, 
                     function (fileEntry) {
-                        var destination = blackberry.io.home + "data/webviews/webfs/persistent/local__0/cordova_bot.png";
+                        
+                        var regex = new RegExp('^filesystem:local:///([^/]+)/(.*)$');
+                        var destination = fileEntry.toURL();
+                        destination = destination.replace(regex,'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
 
                         var fileTransfer = new FileTransfer();
                         fileTransfer.download(
@@ -122,6 +130,10 @@ var app = {
                             destination,
                             function( entry ) {
                                 alert('FILE DOWNLOADED');
+
+                                var video = document.createElement("video");
+                                video.src = url;
+                                document.body.appendChild(video);
                             },
                             function( error ) {
                                 console.log( error );
