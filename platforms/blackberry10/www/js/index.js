@@ -122,7 +122,9 @@ var app = {
                         
                         var regex = new RegExp('^filesystem:local:///([^/]+)/(.*)$');
                         var destination = fileEntry.toURL();
-                        destination = destination.replace(regex,'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
+                        destination = destination.replace(regex, 'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
+                        console.log( destination );
+                        alert('destination');
 
                         var fileTransfer = new FileTransfer();
                         fileTransfer.download(
@@ -130,9 +132,10 @@ var app = {
                             destination,
                             function( entry ) {
                                 alert('FILE DOWNLOADED');
+                                alert( destination );
 
                                 var video = document.createElement("video");
-                                video.src = url;
+                                video.src = destination;
                                 document.body.appendChild(video);
                             },
                             function( error ) {

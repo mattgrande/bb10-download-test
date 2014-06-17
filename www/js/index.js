@@ -107,7 +107,7 @@ var app = {
     },
 
     downloadImageViaFileTransfer: function() {
-        var url = 'http://weeversites.cloudapp.net/streetsmarts/videos/SpecApp_Awstin_2500.mp4';
+        var url = 'http://weeversites.cloudapp.net/streetsmarts/videos/SpecApp_Molly_2500.mp4';
         alert('Downloading: ' + url);
 
         window.webkitRequestFileSystem(
@@ -116,13 +116,15 @@ var app = {
                 console.log("requestFileSystem", arguments);
 
                 fs.root.getFile(
-                    "SpecApp_Awstin_2500.mp4", 
+                    "SpecApp_Molly_2500.mp4", 
                     {create: true}, 
                     function (fileEntry) {
                         
                         var regex = new RegExp('^filesystem:local:///([^/]+)/(.*)$');
                         var destination = fileEntry.toURL();
-                        destination = destination.replace(regex,'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
+                        destination = destination.replace(regex, 'file://'+blackberry.io.home+'/webviews/webfs/$1/local__0/$2');
+                        console.log( destination );
+                        alert('destination');
 
                         var fileTransfer = new FileTransfer();
                         fileTransfer.download(
@@ -130,9 +132,10 @@ var app = {
                             destination,
                             function( entry ) {
                                 alert('FILE DOWNLOADED');
+                                alert( destination );
 
                                 var video = document.createElement("video");
-                                video.src = url;
+                                video.src = destination;
                                 document.body.appendChild(video);
                             },
                             function( error ) {
